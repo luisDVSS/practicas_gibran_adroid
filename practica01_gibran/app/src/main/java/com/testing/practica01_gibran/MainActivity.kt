@@ -24,7 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.testing.practica01_gibran.ui.theme.AppNavigator
+import com.testing.practica01_gibran.ui.theme.AppNavigation
 import com.testing.practica01_gibran.ui.theme.Practica01_gibranTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Practica01_gibranTheme {
-            AppNavigator()
+                AppNavigation()
             }
         }
     }
