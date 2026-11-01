@@ -82,7 +82,6 @@ fun MainScreen() {
     var mostrarDialog by remember { mutableStateOf(false) }
     var tareaSeleccionada by remember { mutableStateOf<Tarea?>(null) }
     var menuExpandido by remember { mutableStateOf(false) }
-    var orden by remember { mutableStateOf(Orden.PREDETERMINADO) }
     var ahora by remember { mutableLongStateOf(System.currentTimeMillis()) }
     var idsOcultos by remember { mutableStateOf(setOf<Int>()) }
     var versiones by remember { mutableStateOf(mapOf<Int, Int>()) }
@@ -94,11 +93,18 @@ fun MainScreen() {
 
     // Preferencia guardada: ocultar completadas
     val prefs = remember { context.getSharedPreferences("ajustes", Context.MODE_PRIVATE) }
+
+    var orden by remember {
+        val guardado = prefs.getString("orden", null)
+        mutableStateOf(
+            Orden.entries.firstOrNull { it.name == guardado } ?: Orden.PREDETERMINADO
+        )
+    }
     var ocultarCompletas by remember {
         mutableStateOf(prefs.getBoolean("ocultar_completas", false))
     }
-
     val tareas by dao.getAllTasks().collectAsState(initial = emptyList())
+
     val tareasOrdenadas = remember(tareas, orden) { tareas.ordenarPor(orden) }
     val tareasVisibles = remember(tareasOrdenadas, idsOcultos, ocultarCompletas) {
         tareasOrdenadas.filter {
@@ -197,6 +203,7 @@ fun MainScreen() {
                                 },
                                 onClick = {
                                     orden = opcion
+                                    prefs.edit().putString("orden", opcion.name).apply()
                                     menuExpandido = false
                                 }
                             )
